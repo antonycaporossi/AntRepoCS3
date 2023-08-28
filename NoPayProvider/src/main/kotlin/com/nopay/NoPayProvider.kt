@@ -55,8 +55,7 @@ class NoPayProvider : MainAPI() {
             fixUrl(
                 this.selectFirst("h4")?.attr("style")
                     ?.substringAfter("(")?.substringBefore(")") ?: ""
-            ),
-            posterHeaders = interceptor.getCookieHeaders(mainUrl).toMap()
+            )
         )
     }
 
@@ -70,8 +69,7 @@ class NoPayProvider : MainAPI() {
             name = matchdata?.MatchData?.name ?: "No name",
             posterUrl = poster,
             plot = matchstart,
-            apiName = this@NoPayProvider.name,
-            posterHeaders = interceptor.getCookieHeaders(mainUrl).toMap()
+            apiName = this@NoPayProvider.name
         )
     }
 
@@ -79,9 +77,9 @@ class NoPayProvider : MainAPI() {
         data: LinkParser,
         callback: (ExtractorLink) -> Unit
     ) {
-        val linktoStream = fixUrl(app.get(data.link, interceptor = interceptor).document.selectFirst("iframe")!!.attr("src"))
+        val linktoStream = fixUrl(app.get(data.link).document.selectFirst("iframe")!!.attr("src"))
         val referrerLink = if (linktoStream.contains("nopay")) {
-            app.get(linktoStream, referer = data.link, interceptor = interceptor).document.selectFirst("iframe")?.attr("src")
+            app.get(linktoStream, referer = data.link).document.selectFirst("iframe")?.attr("src")
                 ?: linktoStream
         } else {
             linktoStream
@@ -97,7 +95,7 @@ class NoPayProvider : MainAPI() {
         var streamUrl = getAndUnpack(packed).substringAfter("var src=\"").substringBefore("\"")
         if (streamUrl.contains("allowedDomains")){streamUrl = packed.substringAfter("source:'").substringBefore("'")}
         if (!streamUrl.contains("m3u8")){
-            val script = app.get(linktoStream, referer = data.link, interceptor = interceptor).document.selectFirst("body")?.selectFirst("script").toString()
+            val script = app.get(linktoStream, referer = data.link).document.selectFirst("body")?.selectFirst("script").toString()
             streamUrl = Regex("source: [\\\"'](.*?)[\\\"']").find(script)?.groupValues?.last()?:""
         }
         
