@@ -1,0 +1,8 @@
+{
+  "name": "AntRepoCS3",
+  "description": "Cloudstream Ant Repository",
+  "manifestVersion": 1,
+  "pluginLists": [
+    "https://raw.githubusercontent.com/antonycaporossi/AntRepoCS3/builds/plugins.json"
+  ]
+}
