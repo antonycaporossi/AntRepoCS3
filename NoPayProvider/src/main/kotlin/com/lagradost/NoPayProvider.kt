@@ -1,6 +1,7 @@
 package com.lagradost
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import android.util.Log
 import com.lagradost.cloudstream3.*
 import com.lagradost.cloudstream3.utils.*
 import com.lagradost.cloudstream3.utils.AppUtils.toJson
@@ -84,6 +85,7 @@ class NoPayProvider : MainAPI() {
         } else {
             linktoStream
         }
+
         val packed = when (linktoStream.contains("nopay")) {
             true -> app.get(
                 referrerLink,
@@ -99,6 +101,12 @@ class NoPayProvider : MainAPI() {
             streamUrl = Regex("source: [\\\"'](.*?)[\\\"']").find(script)?.groupValues?.last()?:""
         }
         
+         if(linktoStream.contains("hls.php")){
+            println("linktoStream: $linktoStream")
+            streamUrl = linktoStream.split("#")[1]
+            println("StreamUrl: $streamUrl")
+        }
+
         callback(
             ExtractorLink(
                 source = this.name,
